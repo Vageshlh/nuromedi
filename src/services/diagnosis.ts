@@ -1,9 +1,9 @@
-import { generateDiagnosis } from "./geminiClient";
-import { DiagnosisZodSchema } from "../utils/validator";
-import { fallbackDiagnosis } from "../utils/fallback";
+import { generateDiagnosis } from "./geminiClient.js";
+import { DiagnosisZodSchema } from "../utils/validator.js";
+import { fallbackDiagnosis } from "../utils/fallback.js";
 
-export async function diagnosisController(input: string) {
-  if (!input || input.length < 8) {
+export async function diagnosisController(input) {
+  if (!input || input.length < 5) {
     return fallbackDiagnosis();
   }
 
@@ -12,7 +12,7 @@ export async function diagnosisController(input: string) {
   const parsed = DiagnosisZodSchema.safeParse(result);
 
   if (!parsed.success) {
-    console.error("Schema validation failed", parsed.error);
+    console.error("Schema validation failed:", parsed.error);
     return fallbackDiagnosis();
   }
 
