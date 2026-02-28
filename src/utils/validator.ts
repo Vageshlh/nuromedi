@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { Type } from "@google/genai";
 
 export const DiagnosisZodSchema = z.object({
   extractedSymptoms: z.array(z.string()),
@@ -12,56 +11,45 @@ export const DiagnosisZodSchema = z.object({
   ),
   urgencyLevel: z.enum(["Routine", "Moderate", "Urgent", "Emergency"]),
   recommendedAction: z.string(),
-  redFlags: z.array(z.string()),
+  redFlags: z.array(z.string()).optional(),
   confidenceScore: z.number()
 });
 
-export type DiagnosisResult = z.infer<typeof DiagnosisZodSchema>;
-
-export interface PatientProfile {
-  age: number;
-  gender: string;
-  existingConditions: string[];
-  medications: string[];
-  allergies: string[];
-}
-
 export const diagnosisSchema = {
-  type: Type.OBJECT,
+  type: "object",
   properties: {
     extractedSymptoms: {
-      type: Type.ARRAY,
-      items: { type: Type.STRING }
+      type: "array",
+      items: { type: "string" }
     },
     probableConditions: {
-      type: Type.ARRAY,
+      type: "array",
       items: {
-        type: Type.OBJECT,
+        type: "object",
         properties: {
-          condition: { type: Type.STRING },
-          probability: { type: Type.NUMBER },
-          reasoning: { type: Type.STRING }
+          condition: { type: "string" },
+          probability: { type: "number" },
+          reasoning: { type: "string" }
         },
         required: ["condition", "probability", "reasoning"]
       }
     },
     urgencyLevel: {
-      type: Type.STRING,
+      type: "string",
       enum: ["Routine", "Moderate", "Urgent", "Emergency"]
     },
-    recommendedAction: { type: Type.STRING },
+    recommendedAction: { type: "string" },
     redFlags: {
-      type: Type.ARRAY,
-      items: { type: Type.STRING }
+      type: "array",
+      items: { type: "string" }
     },
-    confidenceScore: { type: Type.NUMBER }
+    confidenceScore: { type: "number" }
   },
   required: [
     "extractedSymptoms",
     "probableConditions",
     "urgencyLevel",
     "recommendedAction",
-    "redFlags",
     "confidenceScore"
   ]
 };
